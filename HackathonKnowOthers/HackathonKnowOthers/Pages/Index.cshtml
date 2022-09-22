@@ -1,0 +1,100 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Get to know your Microsoft family.</h1>
+    <h3>Who do you want to get to know today?</h3>
+    <form method="get">
+        <div class="form-group">
+            <div class="input-group">
+                <input type="alias" class="form-control" asp-for="Alias" />
+                <br/>
+                <span class="input-group-btn">
+                    <button class="btn btn-default" style="background-color:cadetblue">
+                        Do the Magic!
+                    </button>
+                </span>
+            </div>
+        </div>
+    </form>
+    <div class="results" style="text-align: left">
+        @if (@Model.UserDetails != null)
+        {
+            <br />
+            <img src="@Model.ProfilePhoto" width="250" height="250" />
+            <h2>@Model.UserDetails.displayName</h2>
+            <p><b>@Model.UserDetails.jobTitle</b>, @Model.UserDetails.userPrincipalName @foreach (var phone in @Model.UserDetails.businessPhones){ @phone }</p>
+            <hr>
+            @if (Model.Manager != null && Model.Manager.displayName != string.Empty && Model.Manager.userPrincipalName != string.Empty)
+            {
+                <p><b>Manager</b>: @Model.Manager.displayName, @Model.Manager.userPrincipalName</p>
+            }
+            <p>@Model.UserDetails.officeLocation</p>
+            <p>@Model.UserDetails.city  @Model.UserDetails.state  @Model.UserDetails.country</p>
+            @if (@Model.UserDetails.skills.Count > 0)
+            {
+                <p>Skills: @foreach (var skill in @Model.UserDetails.skills) {@skill }</p>
+            }
+            @if (@Model.UserDetails.pastProjects.Count > 0)
+            {
+                <p>Past Projects: @foreach (var pastProject in @Model.UserDetails.pastProjects) {@pastProject }</p>
+            }
+            @if (@Model.DirectReports != null && Model.DirectReports.value.Count > 0)
+            {
+                <p><b>DirectReports:</b></p>
+                @foreach (var dr in Model.DirectReports.value)
+                {
+                    <p><b>@dr.displayName</b>, @dr.userPrincipalName</p>
+                }
+            }
+            <br/>
+            <h3>Personal Details</h3>
+            <hr>
+            <p>For more information, visit their <a href=@Model.UserDetails.delveLink>Delve page</a></p>
+            @if (@Model.UserDetails.aboutMe != null && !@Model.UserDetails.aboutMe.Contains("<div>"))
+            {
+                <p><b>Something about me</b>: @Model.UserDetails.aboutMe</p>
+            }
+            @if (@Model.UserDetails.birthday != "0001-01-01T08:00:00Z")
+            {
+                var date = DateTime.Parse(@Model.UserDetails.birthday).ToString("MMMM dd");
+                <p><b>Birthday</b>: @date</p>
+            }
+            
+            @if (@Model.UserDetails.interests.Count > 0)
+            {
+                <p>Interests: @foreach (var interest in @Model.UserDetails.interests) {@interest }</p>
+            }
+            @if (@Model.UserDetails.schools.Count > 0)
+            {
+                <p>Schools: @foreach (var school in @Model.UserDetails.schools) {@school }</p>
+                <br />
+            }
+            
+        }
+
+        @if (@Model.UserDetails != null && @Model.Emails != null && @Model.Emails.value.Count > 0)
+        {
+            <h3>Latest emails sent by @Model.UserDetails.displayName</h3>
+            <hr>
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <th>Subject</th>
+                </tr>
+                @foreach (var email in @Model.Emails.value)
+                {
+                    <tr>
+                        <td>@email.createdDateTime</td>
+                        <td>@email.subject</td>
+                    </tr>
+                }
+            
+            </table>
+        }
+        
+    </div>
+</div>

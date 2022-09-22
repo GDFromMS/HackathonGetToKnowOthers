@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "SPlwjfPo6MDzMZ8qH8BPsihFGkeGTpnHWwsfgboTVVN4z9T0TduIVLdTUow9DKQiOVOQifnO8eoL8RHaAwd3+Q==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\gdhamdhere\\Project\\HackathonKnowOthers\\HackathonKnowOthers\\HackathonKnowOthers\\HackathonKnowOthers.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\gdhamdhere\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}
