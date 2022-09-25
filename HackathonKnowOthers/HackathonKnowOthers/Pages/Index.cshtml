@@ -1,0 +1,110 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Get to know your Microsoft family.</h1>
+    <form method="get">
+        <div class="form-group">
+            <div class="input-group">
+                <input type="alias" class="form-control" asp-for="Alias" placeholder="Type in the alias you want to search"/>
+                <br/>
+                <span class="input-group-btn">
+                    <button class="btn btn-default" style="background-color:cadetblue">
+                        Do the Magic!
+                    </button>
+                </span>
+            </div>
+        </div>
+    </form>
+    <div class="results" style="text-align: left">
+        @if (@Model.UserDetails != null)
+        {
+            <br />
+            <img src="@Model.ProfilePhoto" width="250" height="250" />
+            <h2>@Model.UserDetails.displayName</h2>
+            <p><b>@Model.UserDetails.jobTitle</b>, @Model.UserDetails.userPrincipalName <b>@Model.UserDetails.officeLocation</b> @foreach (var phone in @Model.UserDetails.businessPhones)
+                    {
+                        @phone
+                    }</p>
+            <p>@Model.UserDetails.city  @Model.UserDetails.state  @Model.UserDetails.country</p>
+            <hr>
+            @if (Model.Manager != null && Model.Manager.displayName != string.Empty && Model.Manager.userPrincipalName != string.Empty)
+            {
+                <p><b>Manager</b>: @Model.Manager.displayName, @Model.Manager.userPrincipalName</p>
+            }
+            @if (@Model.UserDetails.skills.Count > 0)
+            {
+                <p><b>Skills</b> @foreach (var skill in @Model.UserDetails.skills) {@skill }</p>
+            }
+            @if (@Model.UserDetails.pastProjects.Count > 0)
+            {
+                <p><b>Past Projects</b> @foreach (var pastProject in @Model.UserDetails.pastProjects) {@pastProject }</p>
+            }
+            @if (@Model.DirectReports != null && Model.DirectReports.value?.Count > 0)
+            {
+                <p><b>DirectReports:</b></p>
+                @foreach (var dr in Model.DirectReports.value)
+                {
+                    <p><b>@dr.displayName</b>, @dr.userPrincipalName</p>
+                }
+            }
+            <br/>
+            <h3>Personal Details</h3>
+            <hr>
+            @if (@Model.UserDetails.aboutMe != null)
+            {
+                <p><b>Something about me</b>: @Model.UserDetails.aboutMe</p>
+            }
+            @if (@Model.UserDetails.birthday != "0001-01-01T08:00:00Z")
+            {
+                var date = DateTime.Parse(@Model.UserDetails.birthday).ToString("MMMM dd");
+                <p><b>Birthday</b>: @date</p>
+            }
+            
+            @if (@Model.UserDetails.interests.Count > 0)
+            {
+                <p><b>Interests</b>: @foreach (var interest in @Model.UserDetails.interests) {@interest }</p>
+            }
+            @if (@Model.UserDetails.schools.Count > 0)
+            {
+                <p><b>Schools</b>: @foreach (var school in @Model.UserDetails.schools) {@school }</p>
+                <br />
+            }
+            <p>For more information, visit their <a href=@Model.UserDetails.delveLink>Delve page</a></p>
+        }
+
+        @if (@Model.UserDetails != null && @Model.Emails != null && @Model.Emails.value.Count > 0)
+        {
+            <h3>Latest conversations with @Model.UserDetails.displayName</h3>
+            <hr>
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <th>Subject</th>
+                </tr>
+                @foreach (var email in @Model.Emails.value)
+                {
+                    <tr>
+                        <td>@email.createdDateTime</td>
+                        <td>@email.subject</td>
+                    </tr>
+                }
+            
+            </table>
+        }
+        @if (@Model.UserDetails != null)
+        {
+            <br/>
+            <hr>
+            <p>If you'd like for others to Get to Know You, please update your profile on <a href="https://msit.delve.office.com">Delve</a>. The magic is that simple.</p>
+        }
+        @if (@Model.UserDetails == null && @Model.ErrorMessage != null)
+        {
+            <br/>
+            <div class="alert alert-info">Could not find the person. Please try again! Error: @Model.ErrorMessage</div>
+        }
+    </div>
+</div>
