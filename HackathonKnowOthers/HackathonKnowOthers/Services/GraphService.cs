@@ -12,7 +12,7 @@ namespace HackathonKnowOthers.Services
             _httpClient.BaseAddress = new Uri("https://graph.microsoft.com");
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "<ADD_YOUR_TOKEN>");
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Constants.Token);
         }
 
         public async Task<string> GetDirectReports(string alias)

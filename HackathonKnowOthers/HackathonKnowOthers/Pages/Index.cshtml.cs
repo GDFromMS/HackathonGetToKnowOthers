@@ -12,6 +12,9 @@ namespace HackathonKnowOthers.Pages
 
         private readonly IGraphService _graphService;
 
+        [TempData]
+        public string ErrorMessage { get; set; }
+
         [BindProperty(SupportsGet = true)]
         public string Alias { get; set; }
 
@@ -38,21 +41,35 @@ namespace HackathonKnowOthers.Pages
 
         public async Task<IActionResult> OnGet()
         {
-            if (Alias != null)
+            ErrorMessage = null;
+            try
             {
-                ProfilePhoto = await _graphService.GetProfilePhoto(Alias);
+                if (Alias != null)
+                {
+                    ProfilePhoto = await _graphService.GetProfilePhoto(Alias);
 
-                var userDetailsString = await _graphService.GetUser(Alias);
-                UserDetails = JsonConvert.DeserializeObject<GraphUserDetails>(userDetailsString);
+                    var userDetailsString = await _graphService.GetUser(Alias);
+                    var userDetails = JsonConvert.DeserializeObject<GraphUserDetails>(userDetailsString);
+                    if (userDetails.id == string.Empty)
+                    {
+                        throw new Exception($"Cannot find person with alias {Alias}");
+                    }
+                    UserDetails = userDetails;
 
-                var managerString = await _graphService.GetManager(Alias);
-                Manager = JsonConvert.DeserializeObject<GraphUserDetails>(managerString);
+                    var managerString = await _graphService.GetManager(Alias);
+                    Manager = JsonConvert.DeserializeObject<GraphUserDetails>(managerString);
 
-                var directReportsString = await _graphService.GetDirectReports(Alias);
-                DirectReports = JsonConvert.DeserializeObject<DirectReports>(directReportsString);
+                    var directReportsString = await _graphService.GetDirectReports(Alias);
+                    DirectReports = JsonConvert.DeserializeObject<DirectReports>(directReportsString);
 
-                var emailsString = await _graphService.GetEmails($"{Alias}@microsoft.com");
-                Emails = JsonConvert.DeserializeObject<Emails>(emailsString);
+                    var emailsString = await _graphService.GetEmails($"{Alias}@microsoft.com");
+                    Emails = JsonConvert.DeserializeObject<Emails>(emailsString);
+                }
+            }
+            catch (Exception ex)
+            {
+                UserDetails = null;
+                ErrorMessage = ex.Message;
             }
 
             return Page();
