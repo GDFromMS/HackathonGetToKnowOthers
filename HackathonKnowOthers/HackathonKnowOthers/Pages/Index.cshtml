@@ -37,11 +37,16 @@
             }
             @if (@Model.UserDetails.skills.Count > 0)
             {
-                <p><b>Skills</b> @foreach (var skill in @Model.UserDetails.skills) {@skill }</p>
+                var skillsString = string.Join(", ", @Model.UserDetails.skills);
+
+                <p><b>Skills:</b> @skillsString </p>
+
             }
             @if (@Model.UserDetails.pastProjects.Count > 0)
             {
-                <p><b>Past Projects</b> @foreach (var pastProject in @Model.UserDetails.pastProjects) {@pastProject }</p>
+                var projectsString = string.Join(", ", @Model.UserDetails.pastProjects);
+
+                <p><b>Past Projects:</b> @projectsString </p>
             }
             @if (@Model.DirectReports != null && Model.DirectReports.value?.Count > 0)
             {
@@ -66,17 +71,21 @@
             
             @if (@Model.UserDetails.interests.Count > 0)
             {
-                <p><b>Interests</b>: @foreach (var interest in @Model.UserDetails.interests) {@interest }</p>
+                var interestsString = string.Join(", ", @Model.UserDetails.interests);
+
+                <p><b>Interests:</b> @interestsString </p>
             }
             @if (@Model.UserDetails.schools.Count > 0)
             {
-                <p><b>Schools</b>: @foreach (var school in @Model.UserDetails.schools) {@school }</p>
+                var schoolsString = string.Join(", ", @Model.UserDetails.schools);
+
+                <p><b>Schools:</b> @schoolsString </p>
                 <br />
             }
             <p>For more information, visit their <a href=@Model.UserDetails.delveLink>Delve page</a></p>
         }
 
-        @if (@Model.UserDetails != null && @Model.Emails != null && @Model.Emails.value.Count > 0)
+        @if (@Model.UserDetails != null && @Model.Emails != null && @Model.Emails.value != null  && @Model.Emails.value.Count > 0)
         {
             <h3>Latest conversations with @Model.UserDetails.displayName</h3>
             <hr>
